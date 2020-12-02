@@ -1,22 +1,20 @@
-FROM php:7.4-apache
+FROM php:7.4.1-apache
 COPY .user.ini /usr/local/etc/php/conf.d/presta.ini
-RUN apt-get update 
+
+RUN apt-get update
 RUN apt-get install -y
 RUN docker-php-ext-install mysqli
-
 RUN apt-get install libzip-dev -y
 RUN pecl install zip
 
-RUN apt-get install -y sendmail libpng-dev libcurl4-openssl-dev libicu-dev
+RUN apt-get install -y sendmail libcurl4-openssl-dev libicu-dev
+RUN apt-get install -y libgd-dev zlib1g-dev libjpeg-dev libpng-dev
 
-RUN docker-php-ext-install curl
-
+RUN docker-php-ext-configure gd --with-jpeg
 RUN docker-php-ext-install gd
 
-RUN docker-php-ext-install intl pdo pdo_mysql
-
 RUN docker-php-ext-enable zip
-RUN docker-php-ext-enable gd
-RUN docker-php-ext-enable curl
-RUN docker-php-ext-enable mysqli
+RUN docker-php-ext-install curl
+RUN docker-php-ext-install intl pdo pdo_mysql
 RUN a2enmod rewrite
+
