@@ -1,0 +1,35 @@
+services: 
+  db: 
+    image: mysql:5.7
+    environment: 
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: presta
+      #MYSQL_ROOT_HOST: localhost
+      #MYSQL_USER: root
+      #MYSQL_ALLOW_EMPTY_PASSWORD: true
+    #volumes:
+    #- ./presta/db:/docker-entrypoint-initdb.d
+    #command: bash -c "sleep 20 && mysql -uroot -proot presta < /dump/db.sql"
+    ports:
+      - "9906:3306"
+  web:
+    build:
+      context: .
+      dockerfile: extentions
+    container_name: php_web
+    depends_on:
+      - db
+    volumes:
+      - ./:/var/www/html/
+    ports:
+      - "8100:80"
+    stdin_open: true
+    tty: true
+#    command: bash -c "sleep 5 && chmod -R 777 /var/www/html/presta"
+  dbinit:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./presta/db/db.sql:/dump/db.sql
+    #command:  bash -c "sleep 10 && mysql -hdb -uroot -proot presta < /dump/db.sql"
