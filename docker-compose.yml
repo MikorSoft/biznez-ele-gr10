@@ -12,6 +12,9 @@ services:
     #command: bash -c "sleep 20 && mysql -uroot -proot presta < /dump/db.sql"
     ports:
       - "9906:3306"
+    networks:
+      static-network:
+        ipv4_address: 192.168.123.10
   web:
     build:
       context: .
@@ -25,6 +28,9 @@ services:
       - "8100:80"
     stdin_open: true
     tty: true
+    networks:
+      static-network:
+        ipv4_address: 192.168.123.20
 #    command: bash -c "sleep 5 && chmod -R 777 /var/www/html/presta"
   dbinit:
     image: mysql:latest
@@ -33,3 +39,9 @@ services:
     volumes:
       - ./presta/db/db.sql:/dump/db.sql
     #command:  bash -c "sleep 10 && mysql -hdb -uroot -proot presta < /dump/db.sql"
+
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: 192.168.123.0/24
