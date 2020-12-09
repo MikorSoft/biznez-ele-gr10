@@ -31,7 +31,7 @@ services:
     networks:
       static-network:
         ipv4_address: 192.168.123.20
-#    command: bash -c "sleep 5 && chmod -R 777 /var/www/html/presta"
+    command: bash -c "sleep 20 && source /etc/apache2/envvars && /usr/sbin/apache2 && chmod -R 777 presta && cd presta/install/ && php -d memory_limit=-1 index_cli.php --all_languages=0 --db_server=192.168.123.10 --db_password=root --db_name=presta --prefix=ps_ --country=pl --firstname=admin --lastname=admin --password=admin123 --email=admin@admin.pl --base_uri=/presta/ --domain=192.168.1.100:8100 && cd ../../ && chmod -R 777 presta && rm -rf presta/install && tail -F /dev/null"
   dbinit:
     image: mysql:latest
     environment:
