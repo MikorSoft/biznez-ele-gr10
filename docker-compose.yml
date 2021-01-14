@@ -1,15 +1,15 @@
-services: 
-  db: 
+services:
+  db:
     image: mysql:5.7
-    environment: 
+    environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: presta
       #MYSQL_ROOT_HOST: localhost
       #MYSQL_USER: root
       #MYSQL_ALLOW_EMPTY_PASSWORD: true
-    #volumes:
-    #- ./presta/db:/docker-entrypoint-initdb.d
-    #command: bash -c "sleep 20 && mysql -uroot -proot presta < /dump/db.sql"
+#    volumes:
+#    - ./presta/db:/docker-entrypoint-initdb.d
+#    command: bash -c "sleep 20 && tree && mysql -uroot -proot presta < /dump/db.sql && tail -F /dev/null"
     ports:
       - "9906:3306"
     networks:
@@ -31,17 +31,18 @@ services:
     networks:
       static-network:
         ipv4_address: 192.168.123.20
-    command: bash -c "sleep 20 && cd presta && unzip prestashop.zip && cd .. && source /etc/apache2/envvars && /usr/sbin/apache2 && chmod -R 777 presta && cd presta/install/ && php -d memory_limit=-1 index_cli.php --all_languages=0 --db_server=192.168.123.10 --db_password=root --db_name=presta --prefix=ps_ --country=pl --firstname=admin --lastname=admin --password=admin123 --email=admin@admin.pl --base_uri=/presta/ --domain=192.168.0.196:8100 && cd ../../ && chmod -R 777 presta && rm -rf presta/install && tail -F /dev/null"
+    command: bash -c "sleep 20 && source /etc/apache2/envvars && /usr/sbin/apache2 && chmod -R 777 presta && tail -F /dev/null"
   dbinit:
     image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
-      - ./presta/db/db.sql:/dump/db.sql
-    #command:  bash -c "sleep 10 && mysql -hdb -uroot -proot presta < /dump/db.sql"
+      - ./db/backup.sql:/dump/backup.sql
+    command:  bash -c "sleep 10 && mysql -hdb -uroot -proot presta < /dump/backup.sql"
 
 networks:
   static-network:
     ipam:
       config:
         - subnet: 192.168.123.0/24
+
