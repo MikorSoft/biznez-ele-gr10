@@ -36,9 +36,14 @@ services:
     image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: root
+    depends_on:
+      - db
     volumes:
       - ./db/backup.sql:/dump/backup.sql
-    command:  bash -c "sleep 10 && mysql -hdb -uroot -proot presta < /dump/backup.sql"
+    command:  bash -c "sleep 30 && echo start && mysql -h192.168.123.10 -uroot -proot presta < /dump/backup.sql && echo koniec"
+    networks:
+      static-network:
+        ipv4_address: 192.168.123.30
 
 networks:
   static-network:
