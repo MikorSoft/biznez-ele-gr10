@@ -40,7 +40,7 @@ services:
       - db
     volumes:
       - ./db/backup.sql:/dump/backup.sql
-    command:  bash -c "sleep 30 && sed 's/172.20.83.92/${WWW_IP}/g' /dump/backup.sql > db.sql && echo start && mysql -h192.168.123.10 -uroot -proot presta < db.sql && echo koniec"
+    command:  bash -c "sleep 30 && echo start && mysql -h192.168.123.10 -uroot -proot presta < /dump/backup.sql && echo koniec"
     networks:
       static-network:
         ipv4_address: 192.168.123.30
